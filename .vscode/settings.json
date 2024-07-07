@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "shapes.h": "c",
+        "example_file.h": "c"
+    }
+}

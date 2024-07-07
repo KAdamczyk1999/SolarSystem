@@ -1,13 +1,13 @@
 src = []
 src += '../main.cpp'
-src += 'TemplateTest.cpp'
+src += 'GeometryTest.cpp'
 
-src += '../../src/Example/example_file.c'
+src += '../../src/Geometry/shapes.c'
 src += '../../src/glad.c'
 
 inc = []
 inc += include_directories('../../include')
-inc += include_directories('../../include/Example')
+inc += include_directories('../../include/Geometry')
 inc += include_directories('../../include/glad')
 inc += include_directories('../../include/GLFW')
 inc += include_directories('../../include/KHR')
@@ -16,6 +16,6 @@ dep = []
 dep += dependency('gtest')
 dep += dependency('gmock')
 
-app = executable('TemplateTest', src, include_directories : inc, dependencies : dep)
+app = executable('GeometryTest', src, include_directories : inc, dependencies : dep)
 
-test('TemplateTest', app)
+test('GeometryTest', app)

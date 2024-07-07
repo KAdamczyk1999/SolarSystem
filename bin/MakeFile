@@ -1,0 +1,8 @@
+SOURCE_FILES=$(wildcard ../src/*.c)\
+
+test:
+	gcc -g --std=c++17 -I../include -L../lib $(SOURCE_FILES) -lglfw3dll -o test
+
+run:
+	make
+	./test

@@ -1,8 +1,9 @@
 #include <glad/glad.h>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 #include <stdio.h>
 
 #include "View/main_view.h"
+
 
 int main() {
     glfwInit();

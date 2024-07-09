@@ -6,25 +6,29 @@
 #include <windows.h>
 
 #include "Geometry/shapes.h"
+#include "View/shaders.h"
 
-const char* vertexShaderSource =
-    "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-// Fragment Shader source code
-const char* fragmentShaderSource =
-    "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
-    "}\n\0";
-
+const int dimentions = 3;
+Triangle myShape = {{-.25f, 0.0f}, {0.0f, .25f}, {.25f, 0.0f}};
 GLuint shaderProgram;
-void _prepareShaders() {
+GLuint VAO, VBO;
+void _setUpVertexObjects(GLfloat* shapeVertices) {
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    int shapeVerticesCount = sizeof(myShape) / sizeof(myShape[0]);
+    glBufferData(GL_ARRAY_BUFFER, shapeVerticesCount * dimentions * sizeof(GLfloat), shapeVertices, GL_DYNAMIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, shapeVerticesCount * sizeof(GLfloat), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void runOnEntry() {
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
@@ -44,47 +48,21 @@ void _prepareShaders() {
     glDeleteShader(fragmentShader);
 }
 
-GLuint VAO, VBO;
-GLfloat* myShapeVertices;
-int myShapeVerticesCount;
-void _setUpVertexObjects() {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-    glBufferData(GL_ARRAY_BUFFER, myShapeVerticesCount * 3 * sizeof(GLfloat), myShapeVertices, GL_DYNAMIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, myShapeVerticesCount * sizeof(GLfloat), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-Triangle myShape;
-void runOnEntry() {
-    float triangleShape[3][2] = {{-.25f, 0.0f}, {0.0f, .25f}, {.25f, 0.0f}};
-    memcpy(myShape, triangleShape, 6 * sizeof(float));
-    myShapeVerticesCount = sizeof(myShape) / sizeof(myShape[0]);
-    myShapeVertices = malloc(myShapeVerticesCount * 3 * sizeof(GLfloat));
-    mapShapeToGLVertices(myShape, myShapeVertices, myShapeVerticesCount);
-
-    _prepareShaders();
-
-    _setUpVertexObjects();
-}
-
+Point pointOfRotation = {.0f, -.2f};
 void runMainLoop() {
+    int shapeVerticesCount = sizeof(myShape) / sizeof(myShape[0]);
+    GLfloat* myShapeVertices = malloc(shapeVerticesCount * dimentions * sizeof(GLfloat));
+    mapShapeToGLVertices(myShape, myShapeVertices, shapeVerticesCount);
+
+    _setUpVertexObjects(myShapeVertices);
+
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, shapeVerticesCount);
 
-    Point pointOfRotation = {0.0f, 0.0f};
-    rotateShape(myShape, 3, 1.0f, pointOfRotation);
-    mapShapeToGLVertices(myShape, myShapeVertices, 3);
+    rotateShape(myShape, shapeVerticesCount, 1.0f, pointOfRotation);
 
-    _setUpVertexObjects();
+    free(myShapeVertices);
 }
 
 void runOnExit() {

@@ -1,15 +1,19 @@
 #include "Geometry/shapes.h"
 
+#include <assert.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
 
+const int maxDim = 3;
+
 float _degsToRads(float angleDegs) { return (angleDegs * PI) / 180.0f; }
 
-void mapShapeToGLVertices(Point* shape, GLfloat* vertices, int verticesCount) {
+void mapShapeToGLVertices(Point* shape, GLfloat* vertices, int verticesCount, int dim) {
+    assert(dim > 0 && dim <= maxDim);
     for (int i = 0; i < verticesCount; i++) {
-        memcpy(&(vertices[i * 3]), &(shape[i]), 2 * sizeof(GLfloat));
-        vertices[i * 3 + 2] = 0.0f;
+        memcpy(&(vertices[i * maxDim]), &(shape[i]), dim * sizeof(GLfloat));
+        memset(&(vertices[i * maxDim + dim]), 0.0f, (maxDim - dim) * sizeof(GLfloat));
     }
 }
 

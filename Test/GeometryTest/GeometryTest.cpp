@@ -21,16 +21,28 @@ TEST_F(GeometryShould, rotateShapeProperly) {
     }
 }
 
-TEST_F(GeometryShould, convertShapeToVertices) {
-    Triangle triangle = {{0.0f, 0.0f}, {1.0f, 1.0f}, {2.0f, 0.0f}};
-    int triangleVerticesCount = sizeof(triangle) / sizeof(triangle[0]);
-    GLfloat* triangleVertices = (GLfloat*)malloc(triangleVerticesCount * 3 * sizeof(GLfloat));
-    mapShapeToGLVertices(triangle, triangleVertices, triangleVerticesCount);
+TEST_F(GeometryShould, convertShapeToVerticesAllDimenstion) {
+    Point shape[3][3] = {{{0.0f}, {1.0f}, {2.0f}},
+                         {{0.0f, 0.0f}, {1.0f, 1.0f}, {2.0f, 0.0f}},
+                         {{0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}, {2.0f, 0.0f, 2.0f}}};
+    int shapeVerticesCount = sizeof(shape[0]) / sizeof(shape[0][0]);
+    GLfloat* shapeVertices = (GLfloat*)malloc(shapeVerticesCount * 3 * sizeof(GLfloat));
+    for (int dim = 1; dim <= 3; dim++) {
+        mapShapeToGLVertices(shape[dim - 1], shapeVertices, shapeVerticesCount, dim);
 
-    for (int i = 0; i < triangleVerticesCount; i++) {
-        EXPECT_NEAR(triangle[i].x, triangleVertices[i * 3], 0.000001);
-        EXPECT_NEAR(triangle[i].y, triangleVertices[i * 3 + 1], 0.000001);
-        EXPECT_NEAR(0.0f, triangleVertices[i * 3 + 2], 0.000001);
+        for (int j = 0; j < shapeVerticesCount; j++) {
+            EXPECT_NEAR(shape[dim - 1][j].x, shapeVertices[j * 3], 0.000001);
+            EXPECT_NEAR(shape[dim - 1][j].y, shapeVertices[j * 3 + 1], 0.000001);
+            EXPECT_NEAR(shape[dim - 1][j].z, shapeVertices[j * 3 + 2], 0.000001);
+        }
     }
-    free(triangleVertices);
+    free(shapeVertices);
+}
+
+TEST_F(GeometryShould, dieIfWrongDimensionInShapeConversion) {
+    Triangle shape = {{0.0f}, {1.0f}, {2.0f}};
+    int shapeVerticesCount = sizeof(shape) / sizeof(shape[0]);
+    GLfloat* shapeVertices = (GLfloat*)malloc(shapeVerticesCount * 3 * sizeof(GLfloat));
+    EXPECT_DEATH(mapShapeToGLVertices(shape, shapeVertices, shapeVerticesCount, 4), "");
+    free(shapeVertices);
 }

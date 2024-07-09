@@ -12,11 +12,12 @@ extern "C" {
 typedef struct {
     float x;
     float y;
+    float z;
 } Point;
 
 typedef Point Triangle[3];
 
-void mapShapeToGLVertices(Point* shape, GLfloat* vertices, int verticesCount);
+void mapShapeToGLVertices(Point* shape, GLfloat* vertices, int verticesCount, int dim);
 
 void rotateShape(Point* shape, int verticesCount, float angleDegs, Point pointOfRotation);
 

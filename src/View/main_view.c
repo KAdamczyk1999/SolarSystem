@@ -52,7 +52,7 @@ Point pointOfRotation = {.0f, -.2f};
 void runMainLoop() {
     int shapeVerticesCount = sizeof(myShape) / sizeof(myShape[0]);
     GLfloat* myShapeVertices = malloc(shapeVerticesCount * dimentions * sizeof(GLfloat));
-    mapShapeToGLVertices(myShape, myShapeVertices, shapeVerticesCount);
+    mapShapeToGLVertices(myShape, myShapeVertices, shapeVerticesCount, 2);
 
     _setUpVertexObjects(myShapeVertices);
 

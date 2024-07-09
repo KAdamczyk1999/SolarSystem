@@ -20,3 +20,17 @@ TEST_F(GeometryShould, rotateShapeProperly) {
         EXPECT_NEAR(triangle[i].y, triangle2[i].y, 0.000001);
     }
 }
+
+TEST_F(GeometryShould, convertShapeToVertices) {
+    Triangle triangle = {{0.0f, 0.0f}, {1.0f, 1.0f}, {2.0f, 0.0f}};
+    int triangleVerticesCount = sizeof(triangle) / sizeof(triangle[0]);
+    GLfloat* triangleVertices = (GLfloat*)malloc(triangleVerticesCount * 3 * sizeof(GLfloat));
+    mapShapeToGLVertices(triangle, triangleVertices, triangleVerticesCount);
+
+    for (int i = 0; i < triangleVerticesCount; i++) {
+        EXPECT_NEAR(triangle[i].x, triangleVertices[i * 3], 0.000001);
+        EXPECT_NEAR(triangle[i].y, triangleVertices[i * 3 + 1], 0.000001);
+        EXPECT_NEAR(0.0f, triangleVertices[i * 3 + 2], 0.000001);
+    }
+    free(triangleVertices);
+}

@@ -1,9 +1,8 @@
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <glfw/glfw3.h>
 #include <stdio.h>
 
 #include "View/main_view.h"
-
 
 int main() {
     glfwInit();
@@ -11,7 +10,9 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Lesson 1", NULL, NULL);
+    int width = 1920;
+    int height = 1080;
+    GLFWwindow* window = glfwCreateWindow(width, height, "Lesson 1", NULL, NULL);
     if (window == NULL) {
         printf("Failed to create GLFW window\n");
         glfwTerminate();
@@ -25,7 +26,7 @@ int main() {
         return -1;
     };
 
-    glViewport(0, 0, 800, 800);
+    glViewport(0, 0, width, height);
 
     runOnEntry();
 

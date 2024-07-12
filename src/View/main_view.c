@@ -9,23 +9,41 @@
 #include "View/shaders.h"
 
 const int dimentions = 3;
-Triangle myShape = {{-.25f, 0.0f}, {0.0f, .25f}, {.25f, 0.0f}};
+Triangle myShapes[] = {{{-.25f, 0.5f}, {0.0f, .75f}, {.25f, 0.5f}}, {{-.25f, -0.25f}, {0.0f, -.0f}, {.25f, -0.25f}}};
 GLuint shaderProgram;
 GLuint VAO, VBO;
-void _setUpVertexObjects(GLfloat* shapeVertices) {
-    glGenVertexArrays(1, &VAO);
+void _setUpVertexObjects() {
+    int shapeCount = sizeof(myShapes) / sizeof(myShapes[0]);
+    glGenVertexArrays(shapeCount, &VAO);
     glGenBuffers(1, &VBO);
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    int shapeVerticesCount = sizeof(myShape) / sizeof(myShape[0]);
-    glBufferData(GL_ARRAY_BUFFER, shapeVerticesCount * dimentions * sizeof(GLfloat), shapeVertices, GL_DYNAMIC_DRAW);
+    for (int i = 0; i < shapeCount; i++) {
+        int shapeVerticesCount = sizeof(myShapes[i]) / sizeof(myShapes[i][0]);
+        GLfloat* shapeVertices = malloc(shapeVerticesCount * dimentions * sizeof(GLfloat));
+        mapShapeToGLVertices(myShapes[i], shapeVertices, shapeVerticesCount, 2);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, shapeVerticesCount * sizeof(GLfloat), (void*)0);
-    glEnableVertexAttribArray(0);
+        glBufferData(GL_ARRAY_BUFFER, shapeVerticesCount * dimentions * sizeof(GLfloat), shapeVertices,
+                     GL_DYNAMIC_DRAW);
+
+        glVertexAttribPointer(i, shapeVerticesCount, GL_FLOAT, GL_FALSE, shapeVerticesCount * sizeof(GLfloat),
+                              (void*)0);
+        glEnableVertexAttribArray(i);
+
+        free(shapeVertices);
+    }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glUseProgram(shaderProgram);
+    glBindVertexArray(VAO);
+
+    for (int i = 0; i < shapeCount; i++) {
+        int shapeVerticesCount = sizeof(myShapes[i]) / sizeof(myShapes[i][0]);
+        glDrawArrays(GL_TRIANGLES, i, shapeVerticesCount);
+    }
 }
 
 void runOnEntry() {
@@ -50,19 +68,13 @@ void runOnEntry() {
 
 Point pointOfRotation = {.0f, -.2f};
 void runMainLoop() {
-    int shapeVerticesCount = sizeof(myShape) / sizeof(myShape[0]);
-    GLfloat* myShapeVertices = malloc(shapeVerticesCount * dimentions * sizeof(GLfloat));
-    mapShapeToGLVertices(myShape, myShapeVertices, shapeVerticesCount, 2);
+    _setUpVertexObjects();
 
-    _setUpVertexObjects(myShapeVertices);
-
-    glUseProgram(shaderProgram);
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, shapeVerticesCount);
-
-    rotateShape(myShape, shapeVerticesCount, 1.0f, pointOfRotation);
-
-    free(myShapeVertices);
+    int shapeCount = sizeof(myShapes) / sizeof(myShapes[0]);
+    for (int i = 0; i < shapeCount; i++) {
+        int shapeVerticesCount = sizeof(myShapes[i]) / sizeof(myShapes[i][0]);
+        rotateShape(myShapes[i], shapeVerticesCount, 1.0f * (pow(-1.0, i)), pointOfRotation);
+    }
 }
 
 void runOnExit() {

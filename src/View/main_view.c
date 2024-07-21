@@ -22,15 +22,14 @@ void _setUpVertexObjects() {
         glBindVertexArray(VAO[i]);
         glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
 
-        int shapeVerticesCount = sizeof(myShapes[i]) / sizeof(myShapes[i][0]);
-        GLfloat* shapeVertices = malloc(shapeVerticesCount * dimentions * sizeof(GLfloat));
-        mapShapeToGLVertices(myShapes[i], shapeVertices, shapeVerticesCount, 2);
+        float verticesCount = myShapes[i].verticesCount;
 
-        glBufferData(GL_ARRAY_BUFFER, shapeVerticesCount * dimentions * sizeof(GLfloat), shapeVertices,
-                     GL_DYNAMIC_DRAW);
+        GLfloat* shapeVertices = malloc(verticesCount * dimentions * sizeof(GLfloat));
+        mapShapeToGLVertices(myShapes[i], shapeVertices, 2);
 
-        glVertexAttribPointer(0, shapeVerticesCount, GL_FLOAT, GL_FALSE, shapeVerticesCount * sizeof(GLfloat),
-                              (void*)0);
+        glBufferData(GL_ARRAY_BUFFER, verticesCount * dimentions * sizeof(GLfloat), shapeVertices, GL_DYNAMIC_DRAW);
+
+        glVertexAttribPointer(0, verticesCount, GL_FLOAT, GL_FALSE, verticesCount * sizeof(GLfloat), (void*)0);
         glEnableVertexAttribArray(0);
 
         free(shapeVertices);
@@ -38,12 +37,12 @@ void _setUpVertexObjects() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    glUseProgram(shaderProgram);
     for (int i = 0; i < SHAPE_COUNT; i++) {
-        glUseProgram(shaderProgram);
         glBindVertexArray(VAO[i]);
-        int shapeVerticesCount = sizeof(myShapes[i]) / sizeof(myShapes[i][0]);
-        glDrawArrays(GL_TRIANGLES, 0, shapeVerticesCount);
+        glDrawArrays(myShapes[i].drawingMethod, 0, myShapes[i].verticesCount);
     }
+    glUseProgram(0);
 }
 
 void runOnEntry() {
@@ -66,14 +65,19 @@ void runOnEntry() {
     glDeleteShader(fragmentShader);
 }
 
-Point pointOfRotation = {.0f, -.2f};
+void _rotateShapes() {
+    Point pointOfRotation = getShapeCenter(myShapes[0]);
+    for (int i = 0; i < SHAPE_COUNT; i++) {
+        if (i != 0) {
+            rotateShape(myShapes[i], i * 2.0f * (pow(-1.0, i)), getShapeCenter(myShapes[i]));
+        }
+        rotateShape(myShapes[i], 1.0f * (pow(-1.0, i)), pointOfRotation);
+    }
+}
+
 void runMainLoop() {
     _setUpVertexObjects();
-
-    for (int i = 0; i < SHAPE_COUNT; i++) {
-        int shapeVerticesCount = sizeof(myShapes[i]) / sizeof(myShapes[i][0]);
-        rotateShape(myShapes[i], shapeVerticesCount, 1.0f * (pow(-1.0, i)), pointOfRotation);
-    }
+    _rotateShapes();
 }
 
 void runOnExit() {

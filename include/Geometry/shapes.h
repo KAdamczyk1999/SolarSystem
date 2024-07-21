@@ -15,11 +15,17 @@ typedef struct {
     float z;
 } Point;
 
-typedef Point Triangle[3];
+typedef struct {
+    Point* vertices;
+    int verticesCount;
+    int drawingMethod;
+} Shape;
 
-void mapShapeToGLVertices(Point* shape, GLfloat* vertices, int verticesCount, int dim);
+void mapShapeToGLVertices(Shape shape, GLfloat* vertices, int dim);
 
-void rotateShape(Point* shape, int verticesCount, float angleDegs, Point pointOfRotation);
+void rotateShape(Shape shape, float angleDegs, Point pointOfRotation);
+
+Point getShapeCenter(Shape shape);
 
 #ifdef __cplusplus
 }

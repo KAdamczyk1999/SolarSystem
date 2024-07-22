@@ -10,8 +10,8 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    int width = 1920;
-    int height = 1080;
+    int width = 1000;
+    int height = 1000;
     GLFWwindow* window = glfwCreateWindow(width, height, "Lesson 1", NULL, NULL);
     if (window == NULL) {
         printf("Failed to create GLFW window\n");

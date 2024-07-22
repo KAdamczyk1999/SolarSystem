@@ -53,17 +53,17 @@ void drawShapeArray(Shape* shapes, int shapeCount, GLuint shaderProgram) {
     free(VBO);
 }
 
-void drawCircle(Point point, float radius, GLuint shaderProgram) {
+void drawCircle(Circle circle, GLuint shaderProgram) {
 #define STEPS 200
     Shape shapes[STEPS + 1];
     const float angle = PI * 2.0f / STEPS;
-    float prevX = point.x;
-    float prevY = point.y - radius;
+    float prevX = circle.centerPoint.x;
+    float prevY = circle.centerPoint.y - circle.radius;
 
     for (int i = 0; i <= STEPS; i++) {
-        float newX = radius * sin(angle * i);
-        float newY = -radius * cos(angle * i);
-        Point shapeVertices[3] = {point, {prevX, prevY, 0.0f}, {newX, newY, 0.0f}};
+        float newX = circle.radius * sin(angle * i);
+        float newY = -circle.radius * cos(angle * i);
+        Point shapeVertices[3] = {circle.centerPoint, {prevX, prevY, 0.0f}, {newX, newY, 0.0f}};
         shapes[i].vertices = (Point*)malloc(sizeof(shapeVertices));
         memcpy(shapes[i].vertices, shapeVertices, sizeof(shapeVertices));
         shapes[i].verticesCount = 3;

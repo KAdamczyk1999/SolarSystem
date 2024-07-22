@@ -21,9 +21,16 @@ typedef struct {
     int drawingMethod;
 } Shape;
 
+typedef struct {
+    Point centerPoint;
+    float radius;
+} Circle;
+
 void mapShapeToGLVertices(Shape shape, GLfloat* vertices, int dim);
 
-void rotateShape(Shape shape, float angleDegs, Point pointOfRotation);
+void rotatePoint(Point* point, float angleDegs, Point pointOfRotation);
+
+void rotateShape(Shape* shape, float angleDegs, Point pointOfRotation);
 
 Point getShapeCenter(Shape shape);
 

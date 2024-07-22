@@ -8,7 +8,7 @@ extern "C" {
 
 void drawShapeArray(Shape* shapes, int shapeCount, GLuint shaderProgram);
 
-void drawCircle(Point point, float radius, GLuint shaderProgram);
+void drawCircle(Circle circle, GLuint shaderProgram);
 
 #ifdef __cplusplus
 }

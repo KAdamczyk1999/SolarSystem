@@ -32,17 +32,17 @@ void runOnEntry() {
 
 void _rotateShapes(Point pointOfRotation) {
     for (int i = 0; i < SHAPE_COUNT; i++) {
-        rotateShape(satelites[i], (SHAPE_COUNT - i + 1) * 2.0f * (pow(-1.0, i)), getShapeCenter(satelites[i]));
-        rotateShape(satelites[i], (SHAPE_COUNT - i + 1) * .3f * (pow(-1.0, i)), pointOfRotation);
+        rotateShape(&(satelites[i]), (SHAPE_COUNT - i + 1) * 2.0f * (pow(-1.0, i)), getShapeCenter(satelites[i]));
+        rotateShape(&(satelites[i]), (SHAPE_COUNT - i + 1) * .3f * (pow(-1.0, i)), pointOfRotation);
     }
 }
 
 void runMainLoop() {
     drawShapeArray(satelites, SHAPE_COUNT, shaderProgram);
 
-    Point pointOfRotation = {0.0f, 0.0f, 0.0f};
-    drawCircle(pointOfRotation, .06f, shaderProgram);
-    _rotateShapes(pointOfRotation);
+    Circle circle = {{0.0f, 0.0f, 0.0f}, 0.06f};
+    drawCircle(circle, shaderProgram);
+    _rotateShapes(circle.centerPoint);
 }
 
 void runOnExit() { glDeleteProgram(shaderProgram); }

@@ -40,9 +40,9 @@ void _rotateShapes(Point pointOfRotation) {
 void runMainLoop() {
     drawShapeArray(satelites, SHAPE_COUNT, shaderProgram);
 
-    Point pointOfRotation = {0.0f, 0.0f, 0.0f};
-    drawCircle(pointOfRotation, .06f, shaderProgram);
-    _rotateShapes(pointOfRotation);
+    Circle circle = {{0.0f, 0.0f, 0.0f}, 0.06f};
+    drawCircle(circle, shaderProgram);
+    _rotateShapes(circle.centerPoint);
 }
 
 void runOnExit() { glDeleteProgram(shaderProgram); }

@@ -8,14 +8,26 @@ struct GeometryShould : public Test {
     void SetUp() {}
 };
 
+TEST_F(GeometryShould, rotatePointProperly) {
+    Point point1 = {1.0f, 1.0f};
+    Point point2 = point1;
+    Point pointOfRotation = {0.0f, 0.0f};
+
+    rotatePoint(&point1, 10.0f, pointOfRotation);
+    rotatePoint(&point2, 370.0f, pointOfRotation);
+
+    EXPECT_NEAR(point1.x, point2.x, .000001);
+    EXPECT_NEAR(point1.y, point2.y, .000001);
+}
+
 TEST_F(GeometryShould, rotateShapeProperly) {
     Point triangle1Vertices[] = {{1.0f, 2.0f}, {3.0f, 4.0f}, {5.0f, 6.0f}};
     Point triangle2Vertices[] = {{1.0f, 2.0f}, {3.0f, 4.0f}, {5.0f, 6.0f}};
     Shape triangle1 = {triangle1Vertices, 3, GL_TRIANGLES};
     Shape triangle2 = {triangle2Vertices, 3, GL_TRIANGLES};
     Point rotationPoint = {1.0f, 1.0f};
-    rotateShape(triangle1, 10.0f, rotationPoint);
-    rotateShape(triangle2, 370.0f, rotationPoint);
+    rotateShape(&triangle1, 10.0f, rotationPoint);
+    rotateShape(&triangle2, 370.0f, rotationPoint);
     for (int i = 0; i < triangle1.verticesCount; i++) {
         EXPECT_NEAR(triangle1.vertices[i].x, triangle2.vertices[i].x, 0.000001);
         EXPECT_NEAR(triangle1.vertices[i].y, triangle2.vertices[i].y, 0.000001);

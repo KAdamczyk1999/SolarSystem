@@ -32,8 +32,8 @@ void runOnEntry() {
 
 void _rotateShapes(Point pointOfRotation) {
     for (int i = 0; i < SHAPE_COUNT; i++) {
-        rotateShape(satelites[i], (SHAPE_COUNT - i + 1) * 2.0f * (pow(-1.0, i)), getShapeCenter(satelites[i]));
-        rotateShape(satelites[i], (SHAPE_COUNT - i + 1) * .3f * (pow(-1.0, i)), pointOfRotation);
+        rotateShape(&(satelites[i]), (SHAPE_COUNT - i + 1) * 2.0f * (pow(-1.0, i)), getShapeCenter(satelites[i]));
+        rotateShape(&(satelites[i]), (SHAPE_COUNT - i + 1) * .3f * (pow(-1.0, i)), pointOfRotation);
     }
 }
 

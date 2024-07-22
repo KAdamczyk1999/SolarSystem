@@ -17,16 +17,19 @@ void mapShapeToGLVertices(Shape shape, GLfloat* vertices, int dim) {
     }
 }
 
-void rotateShape(Shape shape, float angleDegs, Point pointOfRotation) {
+void rotatePoint(Point* point, float angleDegs, Point pointOfRotation) {
     float angleRads = _degsToRads(angleDegs);
     float cosA = cos(angleRads);
     float sinA = sin(angleRads);
-    for (int i = 0; i < shape.verticesCount; i++) {
-        Point* point = &(shape.vertices[i]);
-        float xDiff = point->x - pointOfRotation.x;
-        float yDiff = point->y - pointOfRotation.y;
-        point->x = pointOfRotation.x + (xDiff)*cosA - (yDiff)*sinA;
-        point->y = pointOfRotation.y + (xDiff)*sinA + (yDiff)*cosA;
+    float xDiff = point->x - pointOfRotation.x;
+    float yDiff = point->y - pointOfRotation.y;
+    point->x = pointOfRotation.x + (xDiff)*cosA - (yDiff)*sinA;
+    point->y = pointOfRotation.y + (xDiff)*sinA + (yDiff)*cosA;
+}
+
+void rotateShape(Shape* shape, float angleDegs, Point pointOfRotation) {
+    for (int i = 0; i < shape->verticesCount; i++) {
+        rotatePoint(&(shape->vertices[i]), angleDegs, pointOfRotation);
     }
 }
 

@@ -20,19 +20,23 @@ Satelite planets[PLANET_COUNT] = {
 };
 
 #define ASTEROID_PAIRS_COUNT 500
-Point asteroidCoords[ASTEROID_PAIRS_COUNT][2];
+typedef struct {
+    Point coords[2];
+    float angularSpeeds[2];
+} AsteroidPairParams;
+
+AsteroidPairParams asteroidPairParams[ASTEROID_PAIRS_COUNT];
 Shape asteroidPairs[ASTEROID_PAIRS_COUNT];
 
 void generateAsteroids() {
     for (int i = 0; i < ASTEROID_PAIRS_COUNT; i++) {
-        for (int j = 0; j < 2; j++) {
-            float angle = rand() / (RAND_MAX / (2 * PI));
-            float proximity = rand() / (RAND_MAX / 0.025f) + 0.22f;
-            asteroidCoords[i][2].x = cos(angle) * proximity;
-            asteroidCoords[i][2].y = sin(angle) * proximity;
-            asteroidCoords[i][2].z = 0.0f;
-        }
-        asteroidPairs[i].vertices = asteroidCoords[i];
+        float angle = rand() / (RAND_MAX / (2 * PI));
+        float proximity = rand() / (RAND_MAX / 0.025f) + 0.22f;
+        asteroidPairParams[i].coords[0].x = cos(angle) * proximity;
+        asteroidPairParams[i].coords[0].y = sin(angle) * proximity;
+        asteroidPairParams[i].coords[0].z = 0.0f;
+        asteroidPairParams[i].angularSpeeds[0] = rand() / (RAND_MAX / .5f);
+        asteroidPairs[i].vertices = asteroidPairParams[i].coords;
         asteroidPairs[i].verticesCount = 2;
         asteroidPairs[i].drawingMethod = GL_POINTS;
     }

@@ -29,9 +29,11 @@ void runOnEntry() {
     glDeleteShader(fragmentShader);
 }
 
-void _rotatePlanets(Point pointOfRotation) {
+void _rotateObjects(Point pointOfRotation) {
     for (int i = 0; i < PLANET_COUNT; i++)
         rotatePoint(&(planets[i].circle.centerPoint), planets[i].angularSpeed, pointOfRotation);
+    for (int i = 0; i < ASTEROID_PAIRS_COUNT; i++)
+        rotatePoint(&(asteroidPairParams[i].coords[0]), asteroidPairParams[i].angularSpeeds[0], pointOfRotation);
 }
 
 void runMainLoop() {
@@ -40,7 +42,7 @@ void runMainLoop() {
 
     drawShapeArray(asteroidPairs, ASTEROID_PAIRS_COUNT, shaderProgram);
 
-    _rotatePlanets(sun.centerPoint);
+    _rotateObjects(sun.centerPoint);
 }
 
 void runOnExit() { glDeleteProgram(shaderProgram); }

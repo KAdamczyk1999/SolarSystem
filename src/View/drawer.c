@@ -23,7 +23,7 @@ void _setUpShape(Shape shape, int shapeIndex, GLuint* VAO, GLuint* VBO) {
     free(shapeVertices);
 }
 
-void _drawShape(Shape shape, int shapeIndex, GLuint* VAO, GLuint* VBO) {
+void _drawShape(Shape shape, int shapeIndex, GLuint* VAO) {
     glBindVertexArray(VAO[shapeIndex]);
     glDrawArrays(shape.drawingMethod, 0, shape.verticesCount);
 }
@@ -42,7 +42,7 @@ void drawShapeArray(Shape* shapes, int shapeCount, GLuint shaderProgram) {
 
     glUseProgram(shaderProgram);
     for (int i = 0; i <= shapeCount; i++) {
-        _drawShape(shapes[i], i, VAO, VBO);
+        _drawShape(shapes[i], i, VAO);
     }
     glUseProgram(0);
 
@@ -54,7 +54,7 @@ void drawShapeArray(Shape* shapes, int shapeCount, GLuint shaderProgram) {
 }
 
 void drawCircle(Circle circle, GLuint shaderProgram) {
-#define STEPS 200
+#define STEPS 50
     Shape shapes[STEPS + 1];
     const float angle = 360.0f / STEPS;
     Point prevPoint = {circle.centerPoint.x, circle.centerPoint.y - circle.radius};

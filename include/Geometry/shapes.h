@@ -7,7 +7,7 @@ extern "C" {
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 
-#define PI 3.141592654
+#define PI 3.141592654f
 
 typedef struct {
     float x;

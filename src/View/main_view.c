@@ -34,9 +34,8 @@ void _rotatePlanets(Point pointOfRotation) {
 
 void runMainLoop() {
     for (int i = 0; i < SHAPE_COUNT; i++) drawCircle(planets[i], shaderProgram);
-
-    Circle sun = {{0.0f, 0.0f, 0.0f}, 0.06f};
     drawCircle(sun, shaderProgram);
+
     _rotatePlanets(sun.centerPoint);
 }
 

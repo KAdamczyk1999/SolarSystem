@@ -9,6 +9,7 @@
 GLuint shaderProgram;
 
 void runOnEntry() {
+    generateAsteroids();
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
@@ -28,15 +29,20 @@ void runOnEntry() {
     glDeleteShader(fragmentShader);
 }
 
-void _rotatePlanets(Point pointOfRotation) {
-    for (int i = 0; i < SHAPE_COUNT; i++) rotatePoint(&(planets[i].centerPoint), angularSpeeds[i], pointOfRotation);
+void _rotateObjects(Point pointOfRotation) {
+    for (int i = 0; i < PLANET_COUNT; i++)
+        rotatePoint(&(planets[i].circle.centerPoint), planets[i].angularSpeed, pointOfRotation);
+    for (int i = 0; i < ASTEROID_PAIRS_COUNT; i++)
+        rotatePoint(&(asteroidPairParams[i].coords[0]), asteroidPairParams[i].angularSpeeds[0], pointOfRotation);
 }
 
 void runMainLoop() {
-    for (int i = 0; i < SHAPE_COUNT; i++) drawCircle(planets[i], shaderProgram);
+    for (int i = 0; i < PLANET_COUNT; i++) drawCircle(planets[i].circle, shaderProgram);
     drawCircle(sun, shaderProgram);
 
-    _rotatePlanets(sun.centerPoint);
+    drawShapeArray(asteroidPairs, ASTEROID_PAIRS_COUNT, shaderProgram);
+
+    _rotateObjects(sun.centerPoint);
 }
 
 void runOnExit() { glDeleteProgram(shaderProgram); }

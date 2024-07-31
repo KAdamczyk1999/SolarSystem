@@ -17,7 +17,7 @@ void _setUpShape(Shape shape, int shapeIndex, GLuint* VAO, GLuint* VBO) {
 
     glBufferData(GL_ARRAY_BUFFER, verticesCount * dimentions * sizeof(GLfloat), shapeVertices, GL_DYNAMIC_DRAW);
 
-    glVertexAttribPointer(0, verticesCount, GL_FLOAT, GL_FALSE, verticesCount * sizeof(GLfloat), (void*)0);
+    glVertexAttribPointer(0, dimentions, GL_FLOAT, GL_FALSE, dimentions * sizeof(GLfloat), (void*)0);
     glEnableVertexAttribArray(0);
 
     free(shapeVertices);

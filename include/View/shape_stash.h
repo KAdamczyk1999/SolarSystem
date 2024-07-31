@@ -19,25 +19,28 @@ Satelite planets[PLANET_COUNT] = {
     {{{0.0f, 0.70f, 0.0f}, 0.0200f}, 2.370E-02f}, {{{0.0f, 0.90f, 0.0f}, 0.0200f}, 1.208E-02f},
 };
 
-#define ASTEROID_PAIRS_COUNT 500
+#define ASTEROID_GROUP_COUNT 500
+#define ASTEROID_GROUP_SIZE 3
 typedef struct {
-    Point coords[2];
-    float angularSpeeds[2];
-} AsteroidPairParams;
+    Point coords[ASTEROID_GROUP_SIZE];
+    float angularSpeeds[ASTEROID_GROUP_SIZE];
+} AsteroidGroupParams;
 
-AsteroidPairParams asteroidPairParams[ASTEROID_PAIRS_COUNT];
-Shape asteroidPairs[ASTEROID_PAIRS_COUNT];
+AsteroidGroupParams asteroidGroupParams[ASTEROID_GROUP_COUNT];
+Shape asteroidPairs[ASTEROID_GROUP_COUNT];
 
 void generateAsteroids() {
-    for (int i = 0; i < ASTEROID_PAIRS_COUNT; i++) {
-        float angle = rand() / (RAND_MAX / (2 * PI));
-        float proximity = rand() / (RAND_MAX / 0.025f) + 0.22f;
-        asteroidPairParams[i].coords[0].x = cos(angle) * proximity;
-        asteroidPairParams[i].coords[0].y = sin(angle) * proximity;
-        asteroidPairParams[i].coords[0].z = 0.0f;
-        asteroidPairParams[i].angularSpeeds[0] = rand() / (RAND_MAX / .5f);
-        asteroidPairs[i].vertices = asteroidPairParams[i].coords;
-        asteroidPairs[i].verticesCount = 2;
+    for (int i = 0; i < ASTEROID_GROUP_COUNT; i++) {
+        for (int j = 0; j < ASTEROID_GROUP_SIZE; j++) {
+            float angle = rand() / (RAND_MAX / (2 * PI));
+            float proximity = rand() / (RAND_MAX / 0.025f) + 0.22f;
+            asteroidGroupParams[i].coords[j].x = cos(angle) * proximity;
+            asteroidGroupParams[i].coords[j].y = sin(angle) * proximity;
+            asteroidGroupParams[i].coords[j].z = 0.0f;
+            asteroidGroupParams[i].angularSpeeds[j] = rand() / (RAND_MAX / .5f);
+        }
+        asteroidPairs[i].vertices = asteroidGroupParams[i].coords;
+        asteroidPairs[i].verticesCount = ASTEROID_GROUP_SIZE;
         asteroidPairs[i].drawingMethod = GL_POINTS;
     }
 }

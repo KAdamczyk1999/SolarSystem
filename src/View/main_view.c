@@ -34,6 +34,10 @@ void _rotateObjects(Point pointOfRotation) {
         rotatePoint(&(planets[i].circle.centerPoint), planets[i].angularSpeed, pointOfRotation);
     for (int i = 0; i < ASTEROID_COUNT; i++)
         rotatePoint(&(asteroids.coords[i]), asteroids.angularSpeeds[i], pointOfRotation);
+    for (int i = 0; i < SATURN_RING_ELEMENTS_COUNT; i++)
+        rotatePoint(&(saturnRing.coords[i]), SATURN.angularSpeed, pointOfRotation);
+    for (int i = 0; i < SATURN_RING_ELEMENTS_COUNT; i++)
+        rotatePoint(&(saturnRing.coords[i]), saturnRing.angularSpeeds[i], SATURN.circle.centerPoint);
 }
 
 void runMainLoop() {
@@ -41,6 +45,7 @@ void runMainLoop() {
     drawCircle(sun, shaderProgram);
 
     drawShapeArray(asteroids.shapes, ASTEROID_COUNT, shaderProgram);
+    drawShapeArray(saturnRing.shapes, SATURN_RING_ELEMENTS_COUNT, shaderProgram);
 
     _rotateObjects(sun.centerPoint);
 }

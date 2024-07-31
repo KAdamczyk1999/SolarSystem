@@ -32,16 +32,15 @@ void runOnEntry() {
 void _rotateObjects(Point pointOfRotation) {
     for (int i = 0; i < PLANET_COUNT; i++)
         rotatePoint(&(planets[i].circle.centerPoint), planets[i].angularSpeed, pointOfRotation);
-    for (int i = 0; i < ASTEROID_GROUP_COUNT; i++)
-        for (int j = 0; j < ASTEROID_GROUP_SIZE; j++)
-            rotatePoint(&(asteroidGroupParams[i].coords[j]), asteroidGroupParams[i].angularSpeeds[j], pointOfRotation);
+    for (int i = 0; i < ASTEROID_COUNT; i++)
+        rotatePoint(&(asteroids.coords[i]), asteroids.angularSpeeds[i], pointOfRotation);
 }
 
 void runMainLoop() {
     for (int i = 0; i < PLANET_COUNT; i++) drawCircle(planets[i].circle, shaderProgram);
     drawCircle(sun, shaderProgram);
 
-    drawShapeArray(asteroidPairs, ASTEROID_GROUP_COUNT, shaderProgram);
+    drawShapeArray(asteroids.shapes, ASTEROID_COUNT, shaderProgram);
 
     _rotateObjects(sun.centerPoint);
 }

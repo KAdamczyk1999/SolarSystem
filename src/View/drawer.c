@@ -4,21 +4,26 @@
 #include <stdlib.h>
 #include <string.h>
 
-const int dimentions = 3;
+#include "Common/types.h"
 
 void _setUpShape(Shape shape, int shapeIndex, GLuint* VAO, GLuint* VBO) {
     glBindVertexArray(VAO[shapeIndex]);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[shapeIndex]);
 
-    float verticesCount = shape.verticesCount;
+    int totalVals = DIMENTION_COUNT + COLOR_COUNT;
 
-    GLfloat* shapeVertices = malloc(verticesCount * dimentions * sizeof(GLfloat));
+    int neededSpace = shape.verticesCount * sizeof(GLfloat) * totalVals;
+
+    GLfloat* shapeVertices = malloc(neededSpace);
     mapShapeToGLVertices(shape, shapeVertices, 2);
 
-    glBufferData(GL_ARRAY_BUFFER, verticesCount * dimentions * sizeof(GLfloat), shapeVertices, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, neededSpace, shapeVertices, GL_DYNAMIC_DRAW);
 
-    glVertexAttribPointer(0, dimentions, GL_FLOAT, GL_FALSE, dimentions * sizeof(GLfloat), (void*)0);
+    glVertexAttribPointer(0, DIMENTION_COUNT, GL_FLOAT, GL_FALSE, totalVals * sizeof(GLfloat), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, COLOR_COUNT, GL_FLOAT, GL_FALSE, totalVals * sizeof(GLfloat),
+                          (void*)(COLOR_COUNT * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
 
     free(shapeVertices);
 }
@@ -67,6 +72,7 @@ void drawCircle(Circle circle, GLuint shaderProgram) {
         memcpy(shapes[i].vertices, shapeVertices, sizeof(shapeVertices));
         shapes[i].verticesCount = 3;
         shapes[i].drawingMethod = GL_TRIANGLES;
+        shapes[i].color = circle.color;
 
         prevPoint = newPoint;
     }

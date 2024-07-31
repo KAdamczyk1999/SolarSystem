@@ -27,6 +27,8 @@ void runOnEntry() {
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+
+    glEnable(GL_COLOR_MATERIAL);
 }
 
 void _rotateObjects(Point pointOfRotation) {

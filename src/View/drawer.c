@@ -1,31 +1,35 @@
 #include "View/drawer.h"
 
+#include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "Common/types.h"
 
+#define PROPERTIES_MAX_COUNT 36000
+
 void _setUpShape(Shape shape, int shapeIndex, GLuint* VAO, GLuint* VBO) {
+    GLfloat shapeProperties[PROPERTIES_MAX_COUNT];
+
     glBindVertexArray(VAO[shapeIndex]);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[shapeIndex]);
 
     int totalVals = DIMENTION_COUNT + COLOR_COUNT;
 
+    int neededWords = shape.verticesCount * totalVals;
+    assert(neededWords <= PROPERTIES_MAX_COUNT);
     int neededSpace = shape.verticesCount * sizeof(GLfloat) * totalVals;
 
-    GLfloat* shapeVertices = malloc(neededSpace);
-    mapShapeToGLVertices(shape, shapeVertices, 2);
+    mapShapeToGLVertices(shape, shapeProperties, 2);
 
-    glBufferData(GL_ARRAY_BUFFER, neededSpace, shapeVertices, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, neededSpace, shapeProperties, GL_DYNAMIC_DRAW);
 
     glVertexAttribPointer(0, DIMENTION_COUNT, GL_FLOAT, GL_FALSE, totalVals * sizeof(GLfloat), (void*)0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, COLOR_COUNT, GL_FLOAT, GL_FALSE, totalVals * sizeof(GLfloat),
                           (void*)(COLOR_COUNT * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
-
-    free(shapeVertices);
 }
 
 void _drawShape(Shape shape, int shapeIndex, GLuint* VAO) {
@@ -34,8 +38,8 @@ void _drawShape(Shape shape, int shapeIndex, GLuint* VAO) {
 }
 
 void drawShapeArray(Shape* shapes, int shapeCount, GLuint shaderProgram) {
-    GLuint* VAO = (GLuint*)malloc(shapeCount * sizeof(Shape));
-    GLuint* VBO = (GLuint*)malloc(shapeCount * sizeof(Shape));
+    GLuint VAO[PROPERTIES_MAX_COUNT / (DIMENTION_COUNT + COLOR_COUNT)];
+    GLuint VBO[PROPERTIES_MAX_COUNT / (DIMENTION_COUNT + COLOR_COUNT)];
     glGenVertexArrays(shapeCount, VAO);
     glGenBuffers(shapeCount, VBO);
 
@@ -53,9 +57,6 @@ void drawShapeArray(Shape* shapes, int shapeCount, GLuint shaderProgram) {
 
     glDeleteVertexArrays(shapeCount, VAO);
     glDeleteBuffers(shapeCount, VBO);
-
-    free(VAO);
-    free(VBO);
 }
 
 void drawCircle(Circle circle, GLuint shaderProgram) {

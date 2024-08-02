@@ -23,7 +23,7 @@ typedef struct {
 typedef struct {
     Point* vertices;
     int verticesCount;
-    int drawingMethod;
+    GLenum drawingMethod;
     Color color;
 } Shape;
 

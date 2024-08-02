@@ -7,7 +7,12 @@ extern "C" {
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 
+#include "Common/types.h"
+
 #define PI 3.141592654f
+
+#define DIMENTION_COUNT 3
+#define COLOR_COUNT 3
 
 typedef struct {
     float x;
@@ -18,12 +23,14 @@ typedef struct {
 typedef struct {
     Point* vertices;
     int verticesCount;
-    int drawingMethod;
+    GLenum drawingMethod;
+    Color color;
 } Shape;
 
 typedef struct {
     Point centerPoint;
     float radius;
+    Color color;
 } Circle;
 
 void mapShapeToGLVertices(Shape shape, GLfloat* vertices, int dim);

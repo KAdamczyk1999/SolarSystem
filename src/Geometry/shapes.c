@@ -5,15 +5,15 @@
 #include <stdio.h>
 #include <string.h>
 
-const int maxDim = 3;
-
 float _degsToRads(float angleDegs) { return (angleDegs * PI) / 180.0f; }
 
 void mapShapeToGLVertices(Shape shape, GLfloat* vertices, int dim) {
-    assert(dim > 0 && dim <= maxDim);
+    assert(dim > 0 && dim <= DIMENTION_COUNT);
+    int totalVals = DIMENTION_COUNT + COLOR_COUNT;
     for (int i = 0; i < shape.verticesCount; i++) {
-        memcpy(&(vertices[i * maxDim]), &(shape.vertices[i]), dim * sizeof(GLfloat));
-        memset(&(vertices[i * maxDim + dim]), 0.0f, (maxDim - dim) * sizeof(GLfloat));
+        memcpy(&(vertices[i * totalVals]), &(shape.vertices[i]), dim * sizeof(GLfloat));
+        memset(&(vertices[i * totalVals + dim]), 0.0f, (DIMENTION_COUNT - dim) * sizeof(GLfloat));
+        memcpy(&(vertices[i * totalVals + 3]), &(shape.color), COLOR_COUNT * sizeof(GLfloat));
     }
 }
 

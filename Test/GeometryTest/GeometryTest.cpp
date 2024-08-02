@@ -38,15 +38,19 @@ TEST_F(GeometryShould, convertShapeToVerticesAllDimenstion) {
     Point shapeVertices[3][3] = {{{0.0f}, {1.0f}, {2.0f}},
                                  {{0.0f, 0.0f}, {1.0f, 1.0f}, {2.0f, 0.0f}},
                                  {{0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}, {2.0f, 0.0f, 2.0f}}};
-    Shape shapes[3] = {
-        {shapeVertices[0], 3, GL_TRIANGLES}, {shapeVertices[1], 3, GL_TRIANGLES}, {shapeVertices[2], 3, GL_TRIANGLES}};
+    Shape shapes[3] = {{shapeVertices[0], 3, GL_TRIANGLES, {0.2f, 0.6f, .80f}},
+                       {shapeVertices[1], 3, GL_TRIANGLES, {0.1f, 0.4f, .11f}},
+                       {shapeVertices[2], 3, GL_TRIANGLES, {1.0f, 2.0f, .30f}}};
     for (int dim = 1; dim <= 3; dim++) {
-        GLfloat* shapeVertices = (GLfloat*)malloc(shapes[dim - 1].verticesCount * 3 * sizeof(GLfloat));
+        GLfloat* shapeVertices = (GLfloat*)malloc(shapes[dim - 1].verticesCount * 6 * sizeof(GLfloat));
         mapShapeToGLVertices(shapes[dim - 1], shapeVertices, dim);
         for (int j = 0; j < shapes[dim - 1].verticesCount; j++) {
-            EXPECT_NEAR(shapes[dim - 1].vertices[j].x, shapeVertices[j * 3], 0.000001);
-            EXPECT_NEAR(shapes[dim - 1].vertices[j].y, shapeVertices[j * 3 + 1], 0.000001);
-            EXPECT_NEAR(shapes[dim - 1].vertices[j].z, shapeVertices[j * 3 + 2], 0.000001);
+            EXPECT_NEAR(shapes[dim - 1].vertices[j].x, shapeVertices[j * 6], 0.000001);
+            EXPECT_NEAR(shapes[dim - 1].vertices[j].y, shapeVertices[j * 6 + 1], 0.000001);
+            EXPECT_NEAR(shapes[dim - 1].vertices[j].z, shapeVertices[j * 6 + 2], 0.000001);
+            EXPECT_NEAR(shapes[dim - 1].color.r, shapeVertices[j * 6 + 3], 0.000001);
+            EXPECT_NEAR(shapes[dim - 1].color.g, shapeVertices[j * 6 + 4], 0.000001);
+            EXPECT_NEAR(shapes[dim - 1].color.b, shapeVertices[j * 6 + 5], 0.000001);
         }
         free(shapeVertices);
     }
